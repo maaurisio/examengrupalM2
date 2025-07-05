@@ -1,0 +1,34 @@
+package com.krakedev.moduloii.evaluacionfinal.servicios;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.krakedev.moduloii.evaluacionfinal.entidades.Genero;
+import com.krakedev.moduloii.evaluacionfinal.utils.ConexionBDD;
+
+public class ServiciosGeneros {
+	private static final Logger LOGGER = LogManager.getLogger(Genero.class);
+
+	public static void insertar(Genero genero) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		LOGGER.trace("Genero a insertar" + genero);
+		try {
+			con = ConexionBDD.conectar();
+			ps = con.prepareStatement(
+					"INSERT INTO generos (nombre) VALUES (?)");
+			ps.setString(1, genero.getNombre());
+			ps.executeUpdate();
+			LOGGER.debug("registro ok");
+		} catch (Exception e) {
+			LOGGER.error("Error al insertar", e);
+			throw new Exception("Error al insertar");
+			// TODO: handle exception
+		} finally {
+			con.close();
+		}
+	}
+}
